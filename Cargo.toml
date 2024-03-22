@@ -1,0 +1,8 @@
+[package]
+name = "actix-backend"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4.5.1"
+serde = "1.0.197"
