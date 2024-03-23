@@ -64,7 +64,7 @@ async fn create_user(
 #[put("/users/{id}")]
 async fn update_user(
     user_id: web::Path<u32>
-    , user_data: web::Json<User>
+    , user_data: web::Json<NewUser>
     , db: web::Data<UserDb>
 ) -> Result<impl Responder, Error> {
     let user_id = user_id.into_inner();
