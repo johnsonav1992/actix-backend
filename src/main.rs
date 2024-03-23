@@ -1,6 +1,18 @@
 use std::{collections::HashMap, sync::{Arc, Mutex}};
 
-use actix_web::{ error::ErrorNotFound, web, App, HttpResponse, HttpServer, Responder, Error};
+use actix_web::{ 
+    error::ErrorNotFound
+    , web
+    , App
+    , HttpResponse
+    , HttpServer
+    , Responder
+    , Error
+    , get
+    , post
+    , main
+};
+
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
@@ -10,7 +22,7 @@ struct User {
 
 type UserDb = Arc<Mutex<HashMap<u32, User>>>;
 
-#[actix_web::get("/users/{id}")]
+#[get("/users/{id}")]
 async fn get_user(
     user_id: web::Path<u32>
     , db: web::Data<UserDb>
@@ -24,7 +36,7 @@ async fn get_user(
     }
 }
 
-#[actix_web::get("/users")]
+#[get("/users")]
 async fn get_users( db: web::Data<UserDb> ) -> impl Responder {
     let db = db.lock().unwrap();
 
@@ -39,7 +51,7 @@ struct CreateUSerResponse {
     , name: String
 }
 
-#[actix_web::post("/users")]
+#[post("/users")]
 async fn create_user(
     user_data: web::Json<User>
     , db: web::Data<UserDb>
@@ -56,7 +68,7 @@ async fn create_user(
         })
 }
 
-#[actix_web::main]
+#[main]
 async fn main() -> std::io::Result<()> {
     let port = 8080;
     println!("Server running on port {}", port);
