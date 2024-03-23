@@ -33,8 +33,6 @@ async fn get_users( db: web::Data<UserDb> ) -> impl Responder {
 
     let users: Vec<&User> = db.values().collect();
 
-    println!("Users: {:?}", users);
-
     HttpResponse::Ok().json(users)
 }
 
