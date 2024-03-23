@@ -8,6 +8,7 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct User {
+    id: u32,
     name: String
 }
 
@@ -36,12 +37,6 @@ async fn get_users( db: web::Data<UserDb> ) -> impl Responder {
     HttpResponse::Ok().json(users)
 }
 
-#[derive(Serialize, Deserialize)]
-struct CreateUSerResponse {
-    id: u32
-    , name: String
-}
-
 #[post("/users")]
 async fn create_user(
     user_data: web::Json<User>
@@ -53,7 +48,7 @@ async fn create_user(
 
         db.insert(new_id, user_data.into_inner());
         
-        HttpResponse::Created().json(CreateUSerResponse {
+        HttpResponse::Created().json(User {
             id: new_id,
             name
         })
