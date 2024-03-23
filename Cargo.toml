@@ -5,4 +5,5 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4.5.1"
+clippy = "0.0.302"
 serde = { version = "1.0.197", features = ["derive"] }
