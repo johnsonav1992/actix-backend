@@ -6,7 +6,7 @@ use actix_web::{
 
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 struct User {
     id: u32,
     name: String
@@ -37,21 +37,28 @@ async fn get_users( db: web::Data<UserDb> ) -> impl Responder {
     HttpResponse::Ok().json(users)
 }
 
+#[derive(Serialize, Deserialize)]
+struct NewUser {
+    name: String
+}
+
 #[post("/users")]
 async fn create_user(
-    user_data: web::Json<User>
+    user_data: web::Json<NewUser>
     , db: web::Data<UserDb>
 ) -> impl Responder {
         let mut db = db.lock().unwrap();
         let new_id = db.keys().max().unwrap_or(&0) + 1;
-        let name = user_data.name.clone(); 
+        let name = user_data.name.clone();
 
-        db.insert(new_id, user_data.into_inner());
-        
-        HttpResponse::Created().json(User {
+        let created_user = User {
             id: new_id,
             name
-        })
+        };
+
+        db.insert(new_id, created_user.clone());
+        
+        HttpResponse::Created().json(created_user)
 }
 
 #[put("/users/{id}")]
